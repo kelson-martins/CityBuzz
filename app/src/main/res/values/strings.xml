@@ -12,6 +12,7 @@
     <string name="title_activity_audience">Audience</string>
     <string name="title_activity_categories">Categories</string>
     <string name="title_activity_questions">Questions</string>
+    <string name="button_live">Live Map</string>
 
     <string-array name="audience">
         <item>General Citizen</item>

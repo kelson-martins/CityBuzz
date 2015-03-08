@@ -1,6 +1,7 @@
 package app.citybuzz;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -20,6 +21,8 @@ public class MainActivity extends ActionBarActivity {
 
 	private Button button_poll;
 	private Button button_report;
+    private Button button_map;
+
     public JSONObject questions = new JSONObject();
     public String question = "";
     final static String ADDRESS = "http://172.16.10.217:3000/";
@@ -54,7 +57,7 @@ public class MainActivity extends ActionBarActivity {
 
                     nextStep.putExtra("id",array.getJSONObject(0).getString("_id"));
                     nextStep.putExtra("question",question);
-                    nextStep.putExtra("category","poll");
+                    nextStep.putExtra("category","polling");
 
                 } catch (Exception e) {
 
@@ -89,5 +92,16 @@ public class MainActivity extends ActionBarActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
+        button_map = (Button) findViewById(R.id.button_map);
+        button_map.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = ADDRESS + "mobile_map";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
     }
 }

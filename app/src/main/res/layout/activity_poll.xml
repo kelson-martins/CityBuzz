@@ -19,6 +19,7 @@
 
     <Button
         android:id="@+id/button_yes"
+        style="@style/btnStyledark_khaki"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/text_question"
@@ -28,6 +29,7 @@
 
     <Button
         android:id="@+id/button_no"
+        style="@style/btnStyleOrange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/button_yes"
