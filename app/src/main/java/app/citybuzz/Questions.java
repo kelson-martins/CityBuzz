@@ -38,6 +38,7 @@ public class Questions extends ActionBarActivity {
     public ArrayList<String> adapter_Amenities = new ArrayList<String>();
     public ArrayList<String> adapter_Bullying = new ArrayList<String>();
 
+    final static String ADDRESS = "http://172.16.10.217:3000/";
 
     public HashMap<String, String> chosed = new HashMap<String, String>();
 
@@ -50,6 +51,10 @@ public class Questions extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_questions);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
         Intent intent = getIntent();
         final String categorie = intent.getStringExtra("categorie");
         list_questions = (ListView) findViewById(R.id.list_questions);
@@ -57,43 +62,49 @@ public class Questions extends ActionBarActivity {
 
         try {
             JSONObject a = questions.execute(
-                    "http://citybuzz.mybluemix.net/getQuestions").get();
+                    ADDRESS + "getQuestions").get();
 
-            JSONArray array = a.getJSONArray("res");
+            if (a != null) {
+                JSONArray array = a.getJSONArray("res");
 
-            for (int i = 0; i < array.length(); i++) {
-                if (array.getJSONObject(i).getString("category")
-                        .equals("Accessibility")) {
-                    list_Accessibility.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
-                    adapter_Accessibility.add(array.getJSONObject(i).getString("question"));
+                for (int i = 0; i < array.length(); i++) {
+                    if (!array.getJSONObject(i).getString("category").isEmpty()) {
+                        if (array.getJSONObject(i).getString("category")
+                                .equals("Accessibility")) {
+                            list_Accessibility.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
+                            adapter_Accessibility.add(array.getJSONObject(i).getString("question"));
 
-                } else if (array.getJSONObject(i).getString("category")
-                        .equals("Community Provision")) {
-                    list_community.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
-                    adapter_Community.add(array.getJSONObject(i).getString("question"));
+                        } else if (array.getJSONObject(i).getString("category")
+                                .equals("Community Provision")) {
+                            list_community.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
+                            adapter_Community.add(array.getJSONObject(i).getString("question"));
 
-                } else if (array.getJSONObject(i).getString("category")
-                        .equals("Culture")) {
-                    list_culture.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
-                    adapter_Culture.add(array.getJSONObject(i).getString("question"));
-                } else if (array.getJSONObject(i).getString("category")
-                        .equals("Environment")) {
-                    list_enviroment.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
-                    adapter_Environment.add(array.getJSONObject(i).getString("question"));
-                } else if (array.getJSONObject(i).getString("category")
-                        .equals("Local Amenities")) {
-                    list_ammenities.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
-                    adapter_Amenities.add(array.getJSONObject(i).getString("question"));
-                } else if (array.getJSONObject(i).getString("category")
-                        .equals("Molestation")) {
-                    list_molestation.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
-                    adapter_Molestation.add(array.getJSONObject(i).getString("question"));
-                } else if (array.getJSONObject(i).getString("category")
-                        .equals("Bulling")) {
-                    list_bullying.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
-                    adapter_Bullying.add(array.getJSONObject(i).getString("question"));
+                        } else if (array.getJSONObject(i).getString("category")
+                                .equals("Culture")) {
+                            list_culture.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
+                            adapter_Culture.add(array.getJSONObject(i).getString("question"));
+                        } else if (array.getJSONObject(i).getString("category")
+                                .equals("Environment")) {
+                            list_enviroment.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
+                            adapter_Environment.add(array.getJSONObject(i).getString("question"));
+                        } else if (array.getJSONObject(i).getString("category")
+                                .equals("Local Amenities")) {
+                            list_ammenities.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
+                            adapter_Amenities.add(array.getJSONObject(i).getString("question"));
+                        } else if (array.getJSONObject(i).getString("category")
+                                .equals("Molestation")) {
+                            list_molestation.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
+                            adapter_Molestation.add(array.getJSONObject(i).getString("question"));
+                        } else if (array.getJSONObject(i).getString("category")
+                                .equals("Bulling")) {
+                            list_bullying.put(array.getJSONObject(i).getString("_id"),array.getJSONObject(i).getString("question"));
+                            adapter_Bullying.add(array.getJSONObject(i).getString("question"));
+                        }
+                    }
+
                 }
             }
+
 
         } catch (InterruptedException e) {
             e.printStackTrace();

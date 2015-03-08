@@ -16,14 +16,14 @@ import java.io.UnsupportedEncodingException;
 public class GetJsonTask extends AsyncTask<JSONObject, String, JSONObject> {
 
 
-
+    final static String ADDRESS = "http://172.16.10.217:3000/";
 
     @Override
     protected JSONObject doInBackground(JSONObject... params) {
 
 
         DefaultHttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppostreq = new HttpPost("http://citybuzz.mybluemix.net/putAnswer");
+        HttpPost httppostreq = new HttpPost(ADDRESS + "putAnswer");
         StringEntity se = null;
         try {
             se = new StringEntity(params[0].toString());

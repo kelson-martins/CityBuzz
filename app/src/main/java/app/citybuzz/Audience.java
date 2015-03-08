@@ -11,15 +11,18 @@ import android.widget.ListView;
 public class Audience extends ActionBarActivity {
 	
 	private ListView list_audience;
-	
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_audience);
-		
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
 		list_audience = (ListView) findViewById(R.id.list_audience);
-
-
 
         // to an array adapter such that it can be used with the spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -40,7 +43,6 @@ public class Audience extends ActionBarActivity {
                 Intent categories = new Intent(Audience.this,Categories.class);
                 categories.putExtra("audience",list_audience.getItemAtPosition(position).toString());
                 startActivity(categories);
-                //Toast.makeText(getApplicationContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
             }
         });
 

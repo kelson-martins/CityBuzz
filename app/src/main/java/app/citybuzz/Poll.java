@@ -1,6 +1,8 @@
 package app.citybuzz;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -31,6 +33,10 @@ public class Poll extends ActionBarActivity implements LocationListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         provider = LocationManager.NETWORK_PROVIDER;
         Location location = lm.getLastKnownLocation(provider);
@@ -50,17 +56,15 @@ public class Poll extends ActionBarActivity implements LocationListener {
 
 			@Override
 			public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(),"Latitute: " + latitude + " / Longitude: " + longitude,Toast.LENGTH_LONG).show();
+
                 JSONObject obj = new JSONObject();
                 try {
+                    obj.put("appID", "1");
                     obj.put("id", id);
-                    obj.put("appID", "0000");
-                    obj.put("question", categorie);
-                    obj.put("answer", "YES");
+                    obj.put("answer", "1");
                     obj.put("category", category);
                     obj.put("coordX", latitude);
                     obj.put("coordY", longitude);
-                    obj.put("timestamp", System.currentTimeMillis());
 
 
                 } catch (JSONException e) {
@@ -70,8 +74,11 @@ public class Poll extends ActionBarActivity implements LocationListener {
 
                 GetJsonTask p = new GetJsonTask();
                 p.execute(obj);
-                Intent goBack = new Intent(Poll.this,MainActivity.class);
-                startActivity(goBack);
+
+                dialogBox();
+
+
+
             }
 		});
 		
@@ -83,14 +90,12 @@ public class Poll extends ActionBarActivity implements LocationListener {
 
                 JSONObject obj = new JSONObject();
                 try {
+                    obj.put("appID", "1");
                     obj.put("id", id);
-                    obj.put("appID", "0000");
-                    obj.put("question", categorie);
-                    obj.put("answer", "NO");
+                    obj.put("answer", "0");
                     obj.put("category", category);
                     obj.put("coordX", latitude);
                     obj.put("coordY", longitude);
-                    obj.put("timestamp", System.currentTimeMillis());
 
                 } catch (JSONException e) {
 
@@ -100,16 +105,22 @@ public class Poll extends ActionBarActivity implements LocationListener {
                 GetJsonTask p = new GetJsonTask();
                 p.execute(obj);
 
-                Intent goBack = new Intent(Poll.this,MainActivity.class);
-                startActivity(goBack);
+                dialogBox();
             }
 		});
 	}
 
     @Override
     public void onLocationChanged(Location location) {
-        latitude = String.valueOf(location.getLatitude());
-        longitude = String.valueOf(location.getLongitude());
+
+        try {
+            latitude = String.valueOf(location.getLatitude());
+            longitude = String.valueOf(location.getLongitude());
+        } catch (Exception e) {
+            latitude = String.valueOf(53.3422227);
+            longitude = String.valueOf(-6.2833865);
+        }
+
 
         Log.v("MainActivity","OnLocationChanged");
     }
@@ -121,7 +132,15 @@ public class Poll extends ActionBarActivity implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
-        Location l = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        try {
+            Location l = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception e) {
+            // we are forcing data for the Emulator purposes since the Emulator does not have Network Provider
+            latitude = String.valueOf(53.3422227);
+            longitude = String.valueOf(-6.2833865);
+        }
+
         Log.v("MainActivity", "OnProviderEnabled");
     }
 
@@ -133,6 +152,30 @@ public class Poll extends ActionBarActivity implements LocationListener {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        lm.requestLocationUpdates(provider, 400, 1, this);
+        try {
+            lm.requestLocationUpdates(provider, 400, 1, this);
+        } catch (Exception e) {
+
+            // we are forcing data for the Emulator purposes since the Emulator does not have Network Provider
+            latitude = String.valueOf(53.3422227);
+            longitude = String.valueOf(-6.2833865);
+        }
+    }
+
+    public void dialogBox() {
+        AlertDialog.Builder alertDialogBuilder = new        AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Thank You. Your Response has been recorded.");
+        alertDialogBuilder.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Intent goBack = new Intent(Poll.this,MainActivity.class);
+                        startActivity(goBack);
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
